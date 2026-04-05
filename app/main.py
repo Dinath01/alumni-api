@@ -6,12 +6,14 @@ from app.models.profile import Profile
 from app.models.bid import Bid
 
 from app.routes.auth_routes import router as auth_router
+from app.routes.profile_routes import router as profile_router
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
 app.include_router(auth_router)
+app.include_router(profile_router)
 
 @app.get("/")
 def root():
