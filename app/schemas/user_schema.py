@@ -1,20 +1,28 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
+import re
 
-#register
+
 class UserReg(BaseModel):
     email: EmailStr
-    password: str = Field(min_length=6, max_length=72)
+    password: str = Field(min_length=8, max_length=72)
 
-#login
+    @field_validator("password")
+    @classmethod
+    def validate_password(cls, value: str):
+        if not re.search(r"[A-Z]", value):
+            raise ValueError("Password must contain at least one uppercase letter")
+        if not re.search(r"[a-z]", value):
+            raise ValueError("Password must contain at least one lowercase letter")
+        if not re.search(r"\d", value):
+            raise ValueError("Password must contain at least one digit")
+        return value
+
+
 class UserLogin(BaseModel):
     email: EmailStr
-    password: str = Field(min_length=6, max_length=72)
+    password: str = Field(min_length=8, max_length=72)
 
-class TokenResponse(BaseModel):
-    access_token: str
-    token_type: str
 
-#response
 class UserRes(BaseModel):
     id: int
     email: EmailStr
@@ -22,3 +30,8 @@ class UserRes(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str
