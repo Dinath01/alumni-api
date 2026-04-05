@@ -16,3 +16,4 @@ class User(Base):
 
     profile = relationship("Profile", back_populates="user", uselist=False)
     bids = relationship("Bid", back_populates="user")
+    featured_days = relationship("FeaturedAlumnis")
